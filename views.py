@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.views import generic
 
 from .models import Choice, Question
+from .forms import NameForm
 
 
 class IndexView(generic.ListView):
@@ -42,3 +43,25 @@ def vote(request, question_id):
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+
+def get_name(request):
+    #if request.method == 'GET':
+    #    return render(request, 'polls/search.html')
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = NameForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            #return HttpResponseRedirect('/thanks/')
+            return render(request, 'polls/search.html', {'form':form})
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = NameForm()
+
+    return render(request, 'polls/name.html', {'form': form})
+
