@@ -8,6 +8,7 @@ from .models import Choice, Question
 from .forms import NameForm
 import json
 
+a = "http://30.48.196.10:8000/test"
 
 class IndexView(generic.ListView):
     template_name = 'polls/index.html'
@@ -46,33 +47,39 @@ def vote(request, question_id):
         # user hits the Back button.
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
 
+def download(request):
+    if request.method == 'GET':
+        url = request.body
+        return HttpResponseRedirect(a)
+        #return HttpResponse("1111")
+
 def get_name(request):
-    #if request.method == 'GET':
-    #    return render(request, 'polls/search.html')
-    # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         concat = request.POST
         subject = request.body
-        #form = NameForm(request.POST)
+        form = NameForm(request.POST)
         rtpreport_dir_f = "/home/tq/py_env/django/mysite/polls/t1.txt"
         #subject = form.cleaned_data['your_name']
-        json_result = json.loads(subject)
-        subject = json_result['your_name']
-        with open(rtpreport_dir_f, "a") as f:
-            f.write(subject + "\n")
-        return HttpResponse("Hello, world. You're at the polls index.")
+        #json_result = json.loads(subject)
+        #subject = json_result['your_name']
+        #with open(rtpreport_dir_f, "a") as f:
+        #    f.write(subject + "\n")
+        #return HttpResponse("Hello, world. You're at the polls index.")
         # check whether it's valid:
-        #if form.is_valid():
-        #    rtpreport_dir_f = "/home/tq/py_env/django/mysite/polls/t1.txt"
-        #    subject = form.cleaned_data['your_name']
-        #    with open(rtpreport_dir_f, "a") as f:
-        #        f.write(subject + "\n")
-            # process the data in form.cleaned_data as required
-            # ...
+        if form.is_valid():
+            rtpreport_dir_f = "/home/tq/py_env/django/mysite/polls/t1.txt"
+            ip = form.cleaned_data['ip']
+            begintime = form.cleaned_data['begintime']
+            endtime = form.cleaned_data['endtime']
+            port = form.cleaned_data['port']
+            with open(rtpreport_dir_f, "a") as f:
+                f.write(ip + "," + begintime + "," + endtime + "," + port)
+            a = "http://30.48.196.10:8000/test"
             # redirect to a new URL:
-            #return HttpResponseRedirect('/thanks/')
-        #    return render(request, 'polls/search.html', {'form':form})
+            # return HttpResponseRedirect("30.")
+            #return HttpResponse("{0},{1},{2},{3}".format(ip, begintime, endtime, port))
+            return render(request, 'polls/download.html', {'downurl':a})
 
     # if a GET (or any other method) we'll create a blank form
     else:
