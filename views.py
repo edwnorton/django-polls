@@ -2,9 +2,11 @@ from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
+from django.http import HttpResponse
 
 from .models import Choice, Question
 from .forms import NameForm
+import json
 
 
 class IndexView(generic.ListView):
@@ -50,14 +52,27 @@ def get_name(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        form = NameForm(request.POST)
+        concat = request.POST
+        subject = request.body
+        #form = NameForm(request.POST)
+        rtpreport_dir_f = "/home/tq/py_env/django/mysite/polls/t1.txt"
+        #subject = form.cleaned_data['your_name']
+        json_result = json.loads(subject)
+        subject = json_result['your_name']
+        with open(rtpreport_dir_f, "a") as f:
+            f.write(subject + "\n")
+        return HttpResponse("Hello, world. You're at the polls index.")
         # check whether it's valid:
-        if form.is_valid():
+        #if form.is_valid():
+        #    rtpreport_dir_f = "/home/tq/py_env/django/mysite/polls/t1.txt"
+        #    subject = form.cleaned_data['your_name']
+        #    with open(rtpreport_dir_f, "a") as f:
+        #        f.write(subject + "\n")
             # process the data in form.cleaned_data as required
             # ...
             # redirect to a new URL:
             #return HttpResponseRedirect('/thanks/')
-            return render(request, 'polls/search.html', {'form':form})
+        #    return render(request, 'polls/search.html', {'form':form})
 
     # if a GET (or any other method) we'll create a blank form
     else:
