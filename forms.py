@@ -1,4 +1,12 @@
 from django import forms
+from .core.widgets import DateTimePickerInput
 
 class NameForm(forms.Form):
-    your_name = forms.CharField(label='Your name', max_length=100)
+    ip = forms.CharField(label='ip', max_length=20)
+    port = forms.CharField(label='port', max_length=10)
+    begintime = forms.DateTimeField(
+        input_formats=['%Y/%m/%d %H:%M'],
+        widget=DateTimePickerInput())
+    endtime = forms.DateTimeField(
+        input_formats=['%Y/%m/%d %H:%M'],
+        widget=DateTimePickerInput())

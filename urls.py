@@ -11,4 +11,5 @@ urlpatterns = [
     path('test/', views.get_name, name='search'),
     path('search/', views.get_name, name='test'),
     path('down/', views.download, name='downtest'),
+    path('t/', views.ttime, name='tttime'),
 ]

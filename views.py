@@ -3,12 +3,13 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
 from django.http import HttpResponse
-
+from datetime import datetime
 from .models import Choice, Question
 from .forms import NameForm
 import json
+import logging
 
-a = "http://30.48.196.10:8000/test"
+a = "http://django.ismartcloud.com.cn:18080/polls/search"
 
 class IndexView(generic.ListView):
     template_name = 'polls/index.html'
@@ -52,6 +53,25 @@ def download(request):
         url = request.body
         return HttpResponseRedirect(a)
         #return HttpResponse("1111")
+
+def ttime(request):
+    rtpreport_dir_f = "/home/tq/py_env/django/mysite/polls/t1.txt"
+    if request.method == 'POST':
+        form = NameForm(request.POST)
+        if form.is_valid():
+            ip = form.cleaned_data['ip']
+            begintime = form.cleaned_data['begintime']
+            begintime = begintime.strftime("%Y/%m/%d %H:%M")
+            endtime = form.cleaned_data['endtime']
+            endtime = endtime.strftime("%Y/%m/%d %H:%M")
+            port = form.cleaned_data['port']
+            with open(rtpreport_dir_f, "a") as f:
+                f.write(ip + "," + begintime + "," + endtime + "," + port)
+            a = "点击下载"
+            return render(request, 'polls/download.html', {'downurl':a})
+    else:
+        form = NameForm
+    return render(request, 'polls/timetest.html', {'form': form})
 
 def get_name(request):
     if request.method == 'POST':
